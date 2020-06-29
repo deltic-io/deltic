@@ -1,0 +1,26 @@
+{
+  "name": "@deltic/streaming-data",
+  "version": "0.1.0",
+  "description": "Streaming Data",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist/* && tsc",
+    "test": "tsc --noEmit && jest"
+  },
+  "keywords": [
+    "streaming",
+    "data",
+    "messages",
+    "events"
+  ],
+  "author": "Frank de Jonge <info@frankdejonge.nl>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.13",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.5"
+  }
+}
