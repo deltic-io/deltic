@@ -33,11 +33,6 @@ export interface MessageConsumerFunc<Stream extends StreamDefinition> {
     (message: AnyMessageFrom<Stream>): Promise<void>
 }
 
-export function createMessageConsumer<Stream extends StreamDefinition>
-    (consume: MessageConsumerFunc<Stream>): MessageConsumer<Stream> {
-    return { consume };
-}
-
 export interface MessageConsumer<Stream extends StreamDefinition> {
     consume(message: AnyMessageFrom<Stream>): Promise<void>
 }
@@ -48,9 +43,4 @@ export interface MessageProducerFunc<Stream extends StreamDefinition> {
 
 export interface MessageProducer<Stream extends StreamDefinition> {
     send(...messages: MessagesFrom<Stream>): Promise<void>
-}
-
-export function createMessageProduver<Stream extends StreamDefinition>
-(send: MessageProducerFunc<Stream>): MessageProducer<Stream> {
-    return { send };
 }

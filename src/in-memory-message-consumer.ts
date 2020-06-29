@@ -11,7 +11,7 @@ export class InMemoryMessageConsumer<Stream extends StreamDefinition> implements
         return this.messages.length === 0;
     }
 
-    public producesMessages(): MessagesFrom<Stream> {
+    public consumedMessages(): MessagesFrom<Stream> {
         return this.messages;
     }
 

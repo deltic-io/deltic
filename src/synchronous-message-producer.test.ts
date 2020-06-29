@@ -22,7 +22,7 @@ test('SynchronousMessageProducer sends messages to consumers', () => {
     producer.send(firstMessage);
     let secondMessage: AnyMessageFrom<ExampleStream> = { type: ExampleTypes.Second, payload: 1234 };
     producer.send(secondMessage);
-    let producesMessages = consumer.producesMessages();
-    expect(producesMessages).toContain(firstMessage);
-    expect(producesMessages).toContain(secondMessage);
+    let producedMessages = consumer.consumedMessages();
+    expect(producedMessages).toContain(firstMessage);
+    expect(producedMessages).toContain(secondMessage);
 });
