@@ -1,6 +1,6 @@
-import { MessageDispatcher, MessagesFrom, StreamDefinition } from './interfaces';
+import { MessageProducer, MessagesFrom, StreamDefinition } from './interfaces';
 
-export class InMemoryMessageProducer<Stream extends StreamDefinition> implements MessageDispatcher<Stream> {
+export class InMemoryMessageProducer<Stream extends StreamDefinition> implements MessageProducer<Stream> {
     private messages: MessagesFrom<Stream> = [];
 
     public clear(): void {

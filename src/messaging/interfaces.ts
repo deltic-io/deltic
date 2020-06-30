@@ -41,6 +41,6 @@ export interface MessageProducerFunc<Stream extends StreamDefinition> {
     (...messages: MessagesFrom<Stream>): Promise<void>
 }
 
-export interface MessageDispatcher<Stream extends StreamDefinition> {
+export interface MessageProducer<Stream extends StreamDefinition> {
     send(...messages: MessagesFrom<Stream>): Promise<void>
 }

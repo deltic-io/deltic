@@ -1,11 +1,11 @@
 import { EventStreamDefinition } from './interfaces';
 import { MessageRepository } from './message-repository';
-import { AnyMessageFrom, MessageDispatcher, MessagesFrom } from '../messaging';
+import { AnyMessageFrom, MessageProducer, MessagesFrom } from '../messaging';
 
 export class DispatchingMessageRepository<Stream extends EventStreamDefinition<Stream>> implements MessageRepository<Stream> {
     constructor(
         private readonly repository: MessageRepository<Stream>,
-        private readonly dispatcher: MessageDispatcher<Stream>
+        private readonly dispatcher: MessageProducer<Stream>
     ) {
     }
 
