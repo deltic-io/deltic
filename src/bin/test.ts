@@ -1,4 +1,7 @@
-import { AggregateRootBehavior, createHandlerLookupTable, EventHandler } from '../event-sourcing';
+import { AggregateRootBehavior, EventHandler } from '../event-sourcing';
+import { InMemoryMessageRepository } from '../event-sourcing/in-memory-message-repository';
+import { AggregateRootRepository } from '../event-sourcing/aggregate-root-repository';
+import { AnyMessageFrom } from '../messaging';
 
 enum ExampleTypes {
     MemberWasAdded = "member.was.added",
@@ -57,17 +60,40 @@ class ExampleAggregateRoot extends AggregateRootBehavior<ExampleStream> {
     protected whenMemberWasRemoved(event: MemberWasRemoved) {
         this.members.delete(event.id);
     }
+
+    static async reconstituteFromEvents(
+        id: ExampleAggregateRootId,
+        messages: AsyncGenerator<AnyMessageFrom<ExampleStream>>
+    ) {
+        let aggregateRoot = new ExampleAggregateRoot(id);
+
+        for await (let m of messages) {
+            aggregateRoot.apply(m);
+        }
+
+        return aggregateRoot;
+    }
 }
 
-let aggregateRoot = new ExampleAggregateRoot('abcd');
 
-const frank: Member = {id: '1234', name: 'Frank', age: 32};
-const renske: Member = {id: '1235', name: 'Renske', age: 29};
+let messageRepository = new InMemoryMessageRepository<ExampleStream>();
+let repository = new AggregateRootRepository(ExampleAggregateRoot, messageRepository);
 
-aggregateRoot.addMember(frank);
-aggregateRoot.addMember(renske);
-aggregateRoot.removeMember(frank.id);
-aggregateRoot.addMember(frank);
-console.log(aggregateRoot.releaseEvents());
+(async () => {
+    console.log('starting');
+    let aggregateRoot = await repository.retrieve('abc');
 
-createHandlerLookupTable(aggregateRoot);
+    const frank: Member = {id: '1234', name: 'Frank', age: 32};
+    const renske: Member = {id: '1235', name: 'Renske', age: 29};
+
+    aggregateRoot.addMember(frank);
+    aggregateRoot.addMember(renske);
+    aggregateRoot.removeMember(frank.id);
+    aggregateRoot.addMember(frank);
+    await repository.persist(aggregateRoot);
+
+    let aggregate = await repository.retrieve('abc');
+    aggregate.removeMember(frank.id);
+    aggregate.addMember(frank);
+    console.log(aggregate.releaseEvents());
+})();
