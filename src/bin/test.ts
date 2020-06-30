@@ -1,8 +1,4 @@
-import {
-    AggregateRootBehavior,
-    createHandlerLookupTable,
-    EventHandler
-} from '../event-sourcing/aggregate-root-behavior';
+import { AggregateRootBehavior, createHandlerLookupTable, EventHandler } from '../event-sourcing';
 
 enum ExampleTypes {
     MemberWasAdded = "member.was.added",
@@ -65,8 +61,8 @@ class ExampleAggregateRoot extends AggregateRootBehavior<ExampleStream> {
 
 let aggregateRoot = new ExampleAggregateRoot('abcd');
 
-const frank: Member = { id: '1234', name: 'Frank', age: 32 };
-const renske: Member = { id: '1235', name: 'Renske', age: 29 };
+const frank: Member = {id: '1234', name: 'Frank', age: 32};
+const renske: Member = {id: '1235', name: 'Renske', age: 29};
 
 aggregateRoot.addMember(frank);
 aggregateRoot.addMember(renske);
