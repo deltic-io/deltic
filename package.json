@@ -6,7 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist/* && tsc",
-    "test": "tsc --noEmit && jest"
+    "test": "tsc --noEmit && jest",
+    "ts-run": "ts-node"
   },
   "keywords": [
     "streaming",
@@ -21,6 +22,11 @@
     "@types/node": "^14.0.13",
     "jest": "^26.0.1",
     "ts-jest": "^26.1.0",
-    "typescript": "^3.9.5"
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5",
+    "uuid": "^8.2.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
   }
 }
