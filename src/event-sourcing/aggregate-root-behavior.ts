@@ -31,16 +31,14 @@ export abstract class AggregateRootBehavior<Stream extends EventStreamDefinition
         this.eventHandlerMethodMap = createHandlerLookupTable(this);
     }
 
-    protected recordThat<T extends AnyMessageTypeFromStream<Stream>>(type: T, payload: Stream['messages'][T]): void
-    {
-        let message = { type, payload };
+    protected recordThat<T extends AnyMessageTypeFromStream<Stream>>(type: T, payload: Stream['messages'][T]): void {
+        let message = {type, payload};
         this.recordedMessages.push(message);
         this.aggregateRootVersionNumber++;
         this.apply(message);
     }
 
-    protected apply(message: AnyMessageFrom<Stream>): void
-    {
+    protected apply(message: AnyMessageFrom<Stream>): void {
         let handler: KeyType | undefined = this.eventHandlerMethodMap.get(message.type as MessageType);
 
         if (handler) {
@@ -58,5 +56,4 @@ export abstract class AggregateRootBehavior<Stream extends EventStreamDefinition
         this.recordedMessages = [];
         return events;
     }
-
 }
