@@ -4,9 +4,11 @@ import { AnyMessageFrom, MessagesFrom } from '../messaging';
 
 export class InMemoryMessageRepository<Stream extends EventStreamDefinition<Stream>> implements MessageRepository<Stream> {
     private messages: Map<Stream['aggregateRootIdType'], MessagesFrom<Stream>> = new Map;
+    private _lastCommit: MessagesFrom<Stream> = [];
 
     async persist(id: Stream["aggregateRootIdType"], messages: MessagesFrom<Stream>) {
         let list = (this.messages.get(id) || []).concat(messages);
+        this._lastCommit = messages;
         this.messages.set(id, list);
     }
 
@@ -16,4 +18,16 @@ export class InMemoryMessageRepository<Stream extends EventStreamDefinition<Stre
         }
     }
 
+    clear(): void {
+        this.messages = new Map();
+        this._lastCommit = [];
+    }
+
+    get lastCommit(): MessagesFrom<Stream> {
+        return this._lastCommit;
+    }
+
+    clearLastCommit(): void {
+        this._lastCommit = [];
+    }
 }

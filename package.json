@@ -7,6 +7,7 @@
   "scripts": {
     "build": "rm -rf dist/* && tsc",
     "test": "tsc --noEmit && jest",
+    "lint": "tsc --noEmit",
     "ts-run": "ts-node"
   },
   "keywords": [

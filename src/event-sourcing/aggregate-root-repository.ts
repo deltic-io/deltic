@@ -2,13 +2,13 @@ import { EventStreamDefinition } from './interfaces';
 import { AnyMessageFrom } from '../messaging';
 import { MessageRepository } from './message-repository';
 
-interface Factory<Concrete, Id, Events> {
-    reconstituteFromEvents(id: Id, events: Events): Promise<Concrete>
+export interface AggregateRootFactory<Stream extends EventStreamDefinition<Stream>> {
+    reconstituteFromEvents(id: Stream['aggregateRootIdType'], events: AsyncGenerator<AnyMessageFrom<Stream>>): Promise<Stream['aggregateRootType']>
 }
 
 export class AggregateRootRepository<Stream extends EventStreamDefinition<Stream>> {
     constructor(
-        private readonly factory: Factory<Stream['aggregateRootType'], Stream['aggregateRootIdType'], AsyncGenerator<AnyMessageFrom<Stream>>>,
+        private readonly factory: AggregateRootFactory<Stream>,
         private readonly messageRepository: MessageRepository<Stream>,
     ) {
     }
