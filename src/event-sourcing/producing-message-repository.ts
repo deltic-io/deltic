@@ -9,12 +9,12 @@ export class ProducingMessageRepository<Stream extends EventStreamDefinition<Str
     ) {
     }
 
-    async persist(id: Stream["aggregateRootIdType"], messages: MessagesFrom<Stream>): Promise<void> {
+    async persist(id: Stream["aggregateRootId"], messages: MessagesFrom<Stream>): Promise<void> {
         await this.repository.persist(id, messages);
         await this.dispatcher.send(...messages);
     }
 
-    retrieveAll(id: Stream["aggregateRootIdType"]): AsyncGenerator<AnyMessageFrom<Stream>> {
+    retrieveAll(id: Stream["aggregateRootId"]): AsyncGenerator<AnyMessageFrom<Stream>> {
         return this.repository.retrieveAll(id);
     }
 

@@ -3,7 +3,7 @@ import { AnyMessageFrom } from '../messaging';
 import { MessageRepository } from './message-repository';
 
 export interface AggregateRootFactory<Stream extends EventStreamDefinition<Stream>> {
-    reconstituteFromEvents(id: Stream['aggregateRootIdType'], events: AsyncGenerator<AnyMessageFrom<Stream>>): Promise<Stream['aggregateRootType']>
+    reconstituteFromEvents(id: Stream['aggregateRootId'], events: AsyncGenerator<AnyMessageFrom<Stream>>): Promise<Stream['aggregateRoot']>
 }
 
 export class AggregateRootRepository<Stream extends EventStreamDefinition<Stream>> {
@@ -13,11 +13,11 @@ export class AggregateRootRepository<Stream extends EventStreamDefinition<Stream
     ) {
     }
 
-    async retrieve(id: Stream['aggregateRootIdType']): Promise<Stream['aggregateRootType']> {
+    async retrieve(id: Stream['aggregateRootId']): Promise<Stream['aggregateRoot']> {
         return this.factory.reconstituteFromEvents(id, this.messageRepository.retrieveAll(id));
     }
 
-    async persist(aggregateRoot: Stream['aggregateRootType']) {
+    async persist(aggregateRoot: Stream['aggregateRoot']) {
         let uncommittedMessages = aggregateRoot.releaseEvents();
         await this.messageRepository.persist(aggregateRoot.aggregateRootId, uncommittedMessages);
     }

@@ -21,12 +21,12 @@ export function createHandlerLookupTable<Stream extends EventStreamDefinition<St
 }
 
 export abstract class AggregateRootBehavior<Stream extends EventStreamDefinition<Stream>> implements AggregateRoot<Stream> {
-    readonly aggregateRootId: Stream['aggregateRootIdType'];
+    readonly aggregateRootId: Stream['aggregateRootId'];
     private recordedMessages: MessagesFrom<Stream> = [];
     private aggregateRootVersionNumber = 0;
     private readonly eventHandlerMethodMap: LookupTable;
 
-    constructor(aggregateRootId: Stream['aggregateRootIdType']) {
+    constructor(aggregateRootId: Stream['aggregateRootId']) {
         this.aggregateRootId = aggregateRootId;
         this.eventHandlerMethodMap = createHandlerLookupTable(this);
     }

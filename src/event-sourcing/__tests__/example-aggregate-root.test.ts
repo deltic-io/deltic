@@ -38,16 +38,20 @@ interface ExampleStream {
 class ExampleAggregateRoot extends AggregateRootBehavior<ExampleStream> {
     private members: Map<string, Member> = new Map();
 
-    public addMember(member: Member): void {
+    addMember(member: Member): void {
         if (!this.members.has(member.id)) {
             this.recordThat(ExampleTypes.MemberWasAdded, member);
         }
     }
 
-    public removeMember(id: string): void {
+    removeMember(id: string): void {
         if (this.members.has(id)) {
             this.recordThat(ExampleTypes.MemberWasRemoved, {id});
         }
+    }
+
+    public throwAnError(error: Error): void {
+        throw error;
     }
 
     @EventHandler(ExampleTypes.MemberWasAdded)
@@ -78,39 +82,46 @@ const frank: Member = {id: '1234', name: 'Frank', age: 32};
 const renske: Member = {id: '1235', name: 'Renske', age: 29};
 const test = createTestTooling<ExampleStream>('abcde', ExampleAggregateRoot);
 
-test("Trying to add a member that is already part of the group", async ({given, when, createMessage, expectNoEvents}) => {
+test("Trying to add a member that is already part of the group", async ({given, when, createMessage, emittedEvents}) => {
     await given(createMessage(ExampleTypes.MemberWasAdded, frank));
     await when(async ({aggregateRoot}) => {
         aggregateRoot.addMember(frank);
     });
-    expectNoEvents();
+    expect(emittedEvents()).toHaveLength(0);
 });
 
-test("Adding a member", async ({when, then, createMessage}) => {
+test("Adding a member", async ({when, emittedEvents, createMessage}) => {
     await when(async ({aggregateRoot}) => {
         aggregateRoot.addMember(frank);
     });
-    then(createMessage(ExampleTypes.MemberWasAdded, frank));
+    expect(emittedEvents()).toEqual([
+        createMessage(ExampleTypes.MemberWasAdded, frank)
+    ]);
 });
 
-test("Adding multiple members", async ({when, then, createMessage}) => {
+test("Adding multiple members", async ({when, createMessage, emittedEvents}) => {
     await when(async ({aggregateRoot}) => {
         aggregateRoot.addMember(frank);
         aggregateRoot.addMember(renske);
     });
-    then(
+    expect(emittedEvents()).toEqual([
         createMessage(ExampleTypes.MemberWasAdded, frank),
         createMessage(ExampleTypes.MemberWasAdded, renske),
-    );
+    ]);
 });
 
-
-test("Removing a member", async ({when, then, createMessage, given}) => {
+test("Removing a member", async ({when, createMessage, given, emittedEvents}) => {
     await given(createMessage(ExampleTypes.MemberWasAdded, frank));
     await when(async ({aggregateRoot}) => {
         aggregateRoot.removeMember(frank.id);
     });
-    then(
-        createMessage(ExampleTypes.MemberWasRemoved, {id: frank.id})
-    );
+    expect(emittedEvents()).toEqual([createMessage(ExampleTypes.MemberWasRemoved, {id: frank.id})])
+});
+
+test("Causing an error", async ({when, thrownError}) => {
+    let error = new Error('what the hell');
+    await when(async ({ aggregateRoot }) => {
+        aggregateRoot.throwAnError(error);
+    });
+    expect(thrownError).toThrow(new Error('what the hell'));
 });

@@ -1,13 +1,13 @@
-import { AggregateRoot, EventStreamDefinition } from './interfaces';
+import { EventStreamDefinition } from './interfaces';
 import { AnyMessageTypeFromStream, MessagesFrom } from '../messaging';
 import { InMemoryMessageRepository } from './in-memory-message-repository';
 import { AggregateRootFactory, AggregateRootRepository } from './aggregate-root-repository';
 
 type WhenHandler<Stream extends EventStreamDefinition<Stream>> =
-    (context: { aggregateRoot: Stream['aggregateRootType'], repository: AggregateRootRepository<Stream> }) => Promise<void>;
+    (context: { aggregateRoot: Stream['aggregateRoot'], repository: AggregateRootRepository<Stream> }) => Promise<void>;
 
 export function createTestTooling<Stream extends EventStreamDefinition<Stream>>(
-    id: Stream['aggregateRootIdType'],
+    id: Stream['aggregateRootId'],
     factory: AggregateRootFactory<Stream>
 ) {
     let jestTest = global.test;
@@ -15,7 +15,10 @@ export function createTestTooling<Stream extends EventStreamDefinition<Stream>>(
     let repository = new AggregateRootRepository(factory, messageRepository);
     let error: Error | undefined = undefined;
 
-    afterEach(() => messageRepository.clear());
+    afterEach(() => {
+        messageRepository.clear();
+        expect(error).toBeUndefined();
+    });
 
     let createMessage = <T extends AnyMessageTypeFromStream<Stream>>(type: T, payload: Stream['messages'][T]) =>
         ({ type, payload });
@@ -24,6 +27,7 @@ export function createTestTooling<Stream extends EventStreamDefinition<Stream>>(
         await messageRepository.persist(id, messages);
         messageRepository.clearLastCommit();
     };
+
     let when = async (handle: WhenHandler<Stream>) => {
         let aggregateRoot = await repository.retrieve(id);
         try {
@@ -35,34 +39,26 @@ export function createTestTooling<Stream extends EventStreamDefinition<Stream>>(
         }
     }
 
-    let then = (...messages: MessagesFrom<Stream>): void => expect(messageRepository.lastCommit).toEqual(messages);
-
-    let expectToFail = async (err?: Error) => {
-        if (error === undefined) {
-            expect(error).not.toBeUndefined();
-        } else {
-            expect(error).toEqual(err);
-        }
+    let thrownError = () => {
+        let e = error;
         error = undefined;
+        throw e;
     }
-
-    let expectNoEvents = () => expect(messageRepository.lastCommit).toHaveLength(0);
+    let emittedEvents = () => messageRepository.lastCommit;
 
     type TestTooling = {
         given: typeof given,
         when: typeof when,
-        then: typeof then,
-        expectToFail: typeof expectToFail,
-        expectNoEvents: typeof expectNoEvents,
         createMessage: typeof createMessage,
+        thrownError: typeof thrownError,
+        emittedEvents: typeof emittedEvents,
     }
 
     type TestHandler = (tools: TestTooling) => Promise<void>;
 
     let test = (name: string, testHandler: TestHandler, timeout?: number) => {
         jestTest(name, async () => {
-            await testHandler({given, when, then, expectToFail, expectNoEvents, createMessage});
-            expect(error).toBeUndefined();
+            await testHandler({given, when, createMessage, emittedEvents, thrownError});
         }, timeout);
     };
 

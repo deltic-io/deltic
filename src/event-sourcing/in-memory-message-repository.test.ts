@@ -9,7 +9,7 @@ enum ExampleTypes {
 }
 
 interface ExampleEventStream extends EventStreamDefinition<ExampleEventStream> {
-    aggregateRootIdType: string,
+    aggregateRootId: string,
     messages: {
         [ExampleTypes.First]: string,
         [ExampleTypes.Second]: number,
