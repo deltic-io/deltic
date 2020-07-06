@@ -28,8 +28,8 @@ type ExampleAggregateRootId = string;
 
 interface ExampleStream {
     topic: 'example'
-    aggregateRootIdType: ExampleAggregateRootId,
-    aggregateRootType: ExampleAggregateRoot,
+    aggregateRootId: ExampleAggregateRootId,
+    aggregateRoot: ExampleAggregateRoot,
     messages: {
         [ExampleTypes.MemberWasAdded]: MemberWasAdded,
         [ExampleTypes.MemberWasRemoved]: MemberWasRemoved,
@@ -39,13 +39,13 @@ interface ExampleStream {
 class ExampleAggregateRoot extends AggregateRootBehavior<ExampleStream> {
     private members: Map<string, Member> = new Map();
 
-    public addMember(member: Member): void {
+    addMember(member: Member): void {
         if (!this.members.has(member.id)) {
             this.recordThat(ExampleTypes.MemberWasAdded, member);
         }
     }
 
-    public removeMember(id: string): void {
+    removeMember(id: string): void {
         if (this.members.has(id)) {
             this.recordThat(ExampleTypes.MemberWasRemoved, {id});
         }
