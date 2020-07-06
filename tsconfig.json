@@ -17,6 +17,7 @@
         "strict": true,
         "types": ["node", "jest"],
         "esModuleInterop": true,
+        "sourceMap": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "experimentalDecorators": true
