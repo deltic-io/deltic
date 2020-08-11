@@ -6,11 +6,11 @@ const eventHandlerMetadataKey = Symbol.for("deltic:event-sourcing:event-handler"
 
 type MessageType = string | number;
 type KeyType = string | symbol;
-type LookupTable = Map<MessageType, KeyType>;
+type EventHandlerMap = Map<MessageType, KeyType>;
 
 export const EventHandler = (messageType: MessageType): MethodDecorator => {
     return (aggregateRoot: object, key: KeyType) => {
-        let metadata: LookupTable = Reflect.getMetadata(eventHandlerMetadataKey, aggregateRoot) || new Map();
+        let metadata: EventHandlerMap = Reflect.getMetadata(eventHandlerMetadataKey, aggregateRoot) || new Map();
         metadata.set(messageType, key);
         Reflect.defineMetadata(eventHandlerMetadataKey, metadata, aggregateRoot);
     }
@@ -24,7 +24,7 @@ export abstract class AggregateRootBehavior<Stream extends EventStreamDefinition
     readonly aggregateRootId: Stream['aggregateRootId'];
     private recordedMessages: MessagesFrom<Stream> = [];
     private aggregateRootVersionNumber = 0;
-    private readonly eventHandlerMethodMap: LookupTable;
+    private readonly eventHandlerMethodMap: EventHandlerMap;
 
     constructor(aggregateRootId: Stream['aggregateRootId']) {
         this.aggregateRootId = aggregateRootId;

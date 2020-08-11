@@ -1,0 +1,28 @@
+{
+  "name": "@deltic/event-sourcing",
+  "version": "0.0.0-managed-by-lerna",
+  "description": "Pragmatic event-sourcing",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist/",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "keywords": [
+    "event-sourcing"
+  ],
+  "author": "Frank de Jonge <info@frankdejonge.nl>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^26.0.9",
+    "@types/node": "^14.0.27",
+    "jest": "^26.3.0",
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "@deltic/messaging": "^0.0.0-managed-by-lerna"
+  }
+}
