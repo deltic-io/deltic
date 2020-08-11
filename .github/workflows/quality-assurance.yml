@@ -17,8 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
-          with:
-            node-version: '12'
+        with:
+          node-version: '12'
       - run: npm ci
       - run: npm run lerna -- bootstrap
       - run: npm run lerna -- exec -- npm run test --coverage-text
