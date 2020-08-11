@@ -1,14 +1,14 @@
 name: Quality Assurance
 
- on:
-   pull_requests:
-     paths-ignore:
-       - '**/*.md'
-   push:
-     branches:
-       - main
-     paths-ignore:
-       - '**/*.md'
+on:
+  pull_requests:
+    paths-ignore:
+      - '**/*.md'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
 
 jobs:
   run:
