@@ -2,6 +2,7 @@
 /**/*/node_modules
 /dist
 /coverage
+/**/*/coverage
 /lerna-debug.log
 /npm-debug.log
 /**/*/dist
