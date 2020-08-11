@@ -1,7 +1,7 @@
 name: Quality Assurance
 
 on:
-  pull_requests:
+  pull_request:
     paths-ignore:
       - '**/*.md'
   push:
