@@ -1,5 +1,5 @@
 import { AggregateRoot, EventStreamDefinition } from './interfaces';
-import { AnyMessageFrom, AnyMessageTypeFromStream, MessagesFrom } from '../messaging';
+import { AnyMessageFrom, AnyMessageTypeFromStream, MessagesFrom } from '@deltic/messaging';
 import 'reflect-metadata';
 
 const eventHandlerMetadataKey = Symbol.for("deltic:event-sourcing:event-handler");

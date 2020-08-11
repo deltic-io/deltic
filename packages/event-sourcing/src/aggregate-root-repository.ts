@@ -1,5 +1,5 @@
 import { EventStreamDefinition } from './interfaces';
-import { AnyMessageFrom } from '../messaging';
+import { AnyMessageFrom } from '@deltic/messaging';
 import { MessageRepository } from './message-repository';
 
 export interface AggregateRootFactory<Stream extends EventStreamDefinition<Stream>> {

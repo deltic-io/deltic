@@ -1,6 +1,6 @@
 import { EventStreamDefinition } from './interfaces';
 import { MessageRepository } from './message-repository';
-import { AnyMessageFrom, MessagesFrom } from '../messaging';
+import { AnyMessageFrom, MessagesFrom } from '@deltic/messaging';
 
 export class InMemoryMessageRepository<Stream extends EventStreamDefinition<Stream>> implements MessageRepository<Stream> {
     private messages: Map<Stream['aggregateRootId'], MessagesFrom<Stream>> = new Map;

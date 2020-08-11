@@ -1,5 +1,5 @@
 import { EventStreamDefinition } from './interfaces';
-import { AnyMessageTypeFromStream, MessagesFrom } from '../messaging';
+import { AnyMessageTypeFromStream, MessagesFrom } from '@deltic/messaging';
 import { InMemoryMessageRepository } from './in-memory-message-repository';
 import { AggregateRootFactory, AggregateRootRepository } from './aggregate-root-repository';
 

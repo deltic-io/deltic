@@ -1,4 +1,4 @@
-import { MessagesFrom, StreamDefinition } from '../messaging';
+import { MessagesFrom, StreamDefinition } from '@deltic/messaging';
 
 export interface AggregateRoot<Stream extends EventStreamDefinition<Stream>> {
     releaseEvents(): MessagesFrom<Stream>;

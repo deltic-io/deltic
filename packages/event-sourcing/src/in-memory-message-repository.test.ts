@@ -1,6 +1,6 @@
 import { InMemoryMessageRepository } from './in-memory-message-repository';
 import { EventStreamDefinition } from './interfaces';
-import { AnyMessageFrom } from '../messaging';
+import { AnyMessageFrom } from '@deltic/messaging';
 import { threadId } from 'worker_threads';
 
 enum ExampleTypes {

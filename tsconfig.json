@@ -1,23 +1,10 @@
 {
-    "include": [
-        "bin/**/*",
-        "src/**/*"
-    ],
-    "exclude": [
-        "**/*.test.ts",
-        "node_modules",
-        "dist"
-    ],
+    "extends": "./tsconfig.build.json",
     "compilerOptions": {
-        "target": "ES2015",
-        "module": "ES2020",
-        "declaration": true,
-        "strict": true,
+        "baseUrl": "./",
+        "paths": {
+            "@deltic/*": ["./packages/*/src/"]
+        },
         "types": ["node", "jest"],
-        "esModuleInterop": true,
-        "sourceMap": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "experimentalDecorators": true
     }
 }

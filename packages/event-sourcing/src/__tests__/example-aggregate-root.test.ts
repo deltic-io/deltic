@@ -1,5 +1,5 @@
 import { AggregateRootBehavior, EventHandler } from '../aggregate-root-behavior';
-import { AnyMessageFrom } from '../../messaging';
+import { AnyMessageFrom } from '@deltic/messaging';
 import { createTestTooling } from '../test-tooling';
 
 enum ExampleTypes {
@@ -27,8 +27,8 @@ type ExampleAggregateRootId = string;
 
 interface ExampleStream {
     topic: 'example'
-    aggregateRootIdType: ExampleAggregateRootId,
-    aggregateRootType: ExampleAggregateRoot,
+    aggregateRootId: ExampleAggregateRootId,
+    aggregateRoot: ExampleAggregateRoot,
     messages: {
         [ExampleTypes.MemberWasAdded]: MemberWasAdded,
         [ExampleTypes.MemberWasRemoved]: MemberWasRemoved,

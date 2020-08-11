@@ -1,6 +1,6 @@
 import { EventStreamDefinition } from './interfaces';
 import { MessageRepository } from './message-repository';
-import { AnyMessageFrom, MessageProducer, MessagesFrom } from '../messaging';
+import { AnyMessageFrom, MessageProducer, MessagesFrom } from '@deltic/messaging';
 
 export class ProducingMessageRepository<Stream extends EventStreamDefinition<Stream>> implements MessageRepository<Stream> {
     constructor(
