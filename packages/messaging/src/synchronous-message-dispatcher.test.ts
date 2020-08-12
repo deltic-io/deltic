@@ -1,6 +1,6 @@
 import { AnyMessageFrom, StreamDefinition } from './interfaces';
 import { InMemoryMessageConsumer } from './in-memory-message-consumer';
-import { SynchronousMessageProducer } from './synchronous-message-producer';
+import { SynchronousMessageDispatcher } from './synchronous-message-dispatcher';
 
 enum ExampleTypes {
     First,
@@ -17,7 +17,7 @@ interface ExampleStream extends StreamDefinition {
 
 test('SynchronousMessageProducer sends messages to consumers', () => {
     const consumer = new InMemoryMessageConsumer();
-    const producer = new SynchronousMessageProducer<ExampleStream>(consumer);
+    const producer = new SynchronousMessageDispatcher<ExampleStream>(consumer);
     let firstMessage: AnyMessageFrom<ExampleStream> = { type: ExampleTypes.First, payload: 'value' };
     producer.send(firstMessage);
     let secondMessage: AnyMessageFrom<ExampleStream> = { type: ExampleTypes.Second, payload: 1234 };

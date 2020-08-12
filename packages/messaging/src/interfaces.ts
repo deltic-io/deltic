@@ -37,10 +37,10 @@ export interface MessageConsumer<Stream extends StreamDefinition> {
     consume(message: AnyMessageFrom<Stream>): Promise<void>
 }
 
-export interface MessageProducerFunc<Stream extends StreamDefinition> {
+export interface MessageDispactcherFunc<Stream extends StreamDefinition> {
     (...messages: MessagesFrom<Stream>): Promise<void>
 }
 
-export interface MessageProducer<Stream extends StreamDefinition> {
+export interface MessageDispatcher<Stream extends StreamDefinition> {
     send(...messages: MessagesFrom<Stream>): Promise<void>
 }
