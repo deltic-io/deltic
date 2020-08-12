@@ -19,5 +19,8 @@ jobs:
       - uses: actions/setup-node@v2-beta
         with:
           node-version: '12'
-      - run: npm ci && npm run lerna -- bootstrap && npm run lerna -- exec -- npm run test --coverage-text
+      - run: npm ci
+      - run: npm run lerna -- bootstrap
+      - run: npm run lerna -- exec -- npm run build
+      - run: npm run lerna -- exec -- npm run test --coverage-text
 
