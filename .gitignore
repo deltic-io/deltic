@@ -1,8 +1,9 @@
 /node_modules
-/**/*/node_modules
+/packages/*/node_modules
 /dist
 /coverage
-/**/*/coverage
+/packages/*/coverage
+/packages/*/package-lock.json
 /lerna-debug.log
 /npm-debug.log
 /**/*/dist
