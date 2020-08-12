@@ -14,11 +14,14 @@ jobs:
   run:
     name: Quality Assurance
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version: ['12', '14']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
         with:
-          node-version: '12'
+          node-version: ${{ matrix.node_version }}
       - run: npm ci
       - run: npm run lerna -- bootstrap
       - run: npm run lerna -- exec -- npm run build
