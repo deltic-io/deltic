@@ -10,8 +10,17 @@ export interface Header {
 
 export interface Message<MessageType, PayloadType> {
     headers?: Header[]
+    topic?: string,
+    partition?: number,
+    offset?: number,
     type: MessageType,
     payload: PayloadType
+}
+
+export interface PartitionedMessage<MessageType, PayloadType> extends Message<MessageType, PayloadType> {
+    topic: string,
+    partition: number,
+    offset: number,
 }
 
 export type MessageHandlers<Stream extends StreamDefinition> = {
