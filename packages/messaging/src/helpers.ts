@@ -2,13 +2,13 @@ import {
     MessageConsumer,
     MessageConsumerFunc,
     MessageDispatcher,
-    MessageDispactcherFunc,
+    MessageDispatcherFunc,
     StreamDefinition
 } from './interfaces';
 
 export function createMessageDispatcher<Stream extends StreamDefinition>
-(dispatch: MessageDispactcherFunc<Stream>): MessageDispatcher<Stream> {
-    return {send: dispatch};
+(send: MessageDispatcherFunc<Stream>): MessageDispatcher<Stream> {
+    return {send};
 }
 
 export function createMessageConsumer<Stream extends StreamDefinition>
