@@ -5,18 +5,18 @@ interface ProcessFunc {
 }
 
 interface ResolvablePromise<Response> extends Promise<Response> {
-    resolve(response?: Response): void;
+    resolve(response: Response | Promise<Response>): void;
     reject(reason?: any): void;
 }
 
 function later<Response>(): ResolvablePromise<Response> {
-    let resolve: (response?: Response) => void;
+    let resolve: (response: Response | Promise<Response>) => void;
     let reject: (response?: any) => void;
     let promise = new Promise<Response>((res, rej) => {
         resolve = res;
         reject = rej;
     });
-    (promise as ResolvablePromise<Response>).resolve = (response?: Response) => resolve(response);
+    (promise as ResolvablePromise<Response>).resolve = (response: Response | Promise<Response>): void => resolve(response);
     (promise as ResolvablePromise<Response>).reject = (reason?: any) => reject(reason);
     return promise as ResolvablePromise<Response>;
 }

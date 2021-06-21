@@ -19,7 +19,7 @@ interface ExampleStream extends StreamDefinition {
 describe('Messaging helper functions', () => {
     test("createMessageDispatcher creates a producer from a function", async () => {
         let actualProducer = new InMemoryMessageDispatcher<ExampleStream>();
-        let producer = createMessageDispatcher(actualProducer.send.bind(actualProducer));
+        let producer = createMessageDispatcher(actualProducer.send.bind(actualProducer) as typeof actualProducer.send);
         let message: AnyMessageFrom<ExampleStream> = {type: 'example', payload: 'lol'};
         await producer.send(message);
         expect(actualProducer.producedMessages()).toContain(message);

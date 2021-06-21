@@ -1,7 +1,7 @@
-import { AggregateRootBehavior, EventHandler } from '../event-sourcing';
-import { InMemoryMessageRepository } from '../event-sourcing/in-memory-message-repository';
-import { AggregateRootRepository } from '../event-sourcing/aggregate-root-repository';
-import { AnyMessageFrom } from '../messaging';
+import { AggregateRootBehavior, EventHandler } from '@deltic/event-sourcing';
+import { InMemoryMessageRepository } from '@deltic/event-sourcing';
+import { AggregateRootRepository } from '@deltic/event-sourcing';
+import { AnyMessageFrom } from '@deltic/messaging';
 
 enum ExampleTypes {
     MemberWasAdded = "member.was.added",
