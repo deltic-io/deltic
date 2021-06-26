@@ -23,7 +23,8 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }}
       - run: npm ci
-      - run: npm run lerna -- bootstrap
-      - run: npm run lerna -- exec -- npm run build
-      - run: npm run lerna -- exec -- npm run test --coverage-text
+      - run: npm run test
+#      - run: npm run lerna -- bootstrap
+#      - run: npm run lerna -- exec -- npm run build
+#      - run: npm run lerna -- exec -- npm run test --coverage-text
 

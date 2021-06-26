@@ -5,11 +5,15 @@ export interface StreamDefinition {
 
 export interface Header {
     key: string,
-    value: Buffer | string,
+    value: Buffer | string | string[],
+}
+
+export interface MessageHeaders {
+    [key: string]: Buffer | string | string[];
 }
 
 export interface Message<MessageType, PayloadType> {
-    headers?: Header[]
+    headers?: MessageHeaders,
     topic?: string,
     partition?: number,
     offset?: number,

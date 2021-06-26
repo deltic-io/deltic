@@ -44,7 +44,7 @@ export function createTestTooling<Stream extends EventStreamDefinition<Stream>>(
         error = undefined;
         throw e;
     }
-    let emittedEvents = () => messageRepository.lastCommit;
+    let emittedEvents = () => messageRepository.lastCommit.map(m => ({type: m.type, payload: m.payload}));
 
     type TestTooling = {
         given: typeof given,

@@ -10,7 +10,7 @@ test('messageWithHeader adds headers to a message', () => {
     const header = {key: 'something', value: 'value'};
     const message = messageWithHeader(exampleMessage, header);
 
-    expect(message.headers).toContain(header);
+    expect(message.headers?.something).toEqual('value');
 });
 
 test('containsMessage detects when messages are contains in a message array', () => {

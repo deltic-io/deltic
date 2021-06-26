@@ -6,6 +6,6 @@
         "paths": {
             "@deltic/*": ["./packages/*/src/"]
         },
-        "types": ["node", "jest"],
+        "types": ["node", "jest"]
     }
 }

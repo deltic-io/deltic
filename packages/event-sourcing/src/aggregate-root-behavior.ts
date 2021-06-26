@@ -32,7 +32,7 @@ export abstract class AggregateRootBehavior<Stream extends EventStreamDefinition
     }
 
     protected recordThat<T extends AnyMessageTypeFromStream<Stream>>(type: T, payload: Stream['messages'][T]): void {
-        let message = {type, payload};
+        let message: AnyMessageFrom<Stream> = {type, payload, headers: {}};
         this.recordedMessages.push(message);
         this.aggregateRootVersionNumber++;
         this.apply(message);
