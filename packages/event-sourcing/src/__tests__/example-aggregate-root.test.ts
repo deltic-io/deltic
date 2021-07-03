@@ -17,6 +17,16 @@ describe('Example aggregate root testing', () => {
         expect(emittedEvents()).toHaveLength(0);
     });
 
+    test("An aggregate root maintains a version", async ({when, createMessage}) => {
+        await when(async ({ aggregateRoot }) => {
+            expect(aggregateRoot.aggregateRootVersion()).toEqual(0);
+            aggregateRoot.addMember(frank);
+            expect(aggregateRoot.aggregateRootVersion()).toEqual(1);
+            aggregateRoot.addMember(renske);
+            expect(aggregateRoot.aggregateRootVersion()).toEqual(2);
+        });
+    });
+
     test("Adding a member", async ({when, emittedEvents, createMessage}) => {
         await when(async ({aggregateRoot}) => {
             aggregateRoot.addMember(frank);

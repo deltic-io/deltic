@@ -14,9 +14,6 @@ export interface MessageHeaders {
 
 export interface Message<MessageType, PayloadType> {
     headers?: MessageHeaders,
-    topic?: string,
-    partition?: number,
-    offset?: number,
     type: MessageType,
     payload: PayloadType
 }

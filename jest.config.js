@@ -1,17 +1,3 @@
-const tsconfig = require("./tsconfig.json");
-const fromPairs = pairs => pairs.reduce((res, [key, value]) => ({ ...res, [key]: value }), {})
-
-function createModuleNameMapper(tsconfig) {
-    return fromPairs(
-        Object.entries(tsconfig.compilerOptions.paths).map(([k, [v]]) => [
-            `^${k.replace(/\*/, "(.*)")}`,
-            `<rootDir>/${v.replace(/\*/, "$1")}`,
-        ]),
-    )
-};
-
-let moduleNameMapper = createModuleNameMapper(tsconfig);
-
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
@@ -21,8 +7,11 @@ module.exports = {
         "packages/**/*.{ts,js,jsx}"
     ],
     coveragePathIgnorePatterns: [
+        "jest.config.js",
         "/node_modules/",
         "/dist/",
     ],
-    moduleNameMapper,
+    moduleNameMapper: {
+        '^@deltic/(.*)$': '<rootDir>/packages/$1/src/'
+    }
 };
