@@ -4,6 +4,7 @@ import { AnyMessageFrom } from '@deltic/messaging';
 export enum ExampleTypes {
     MemberWasAdded = "member.was.added",
     MemberWasRemoved = "member.was.removed",
+    InsignificantThing = "insignificant.thing",
 }
 
 export interface Member {
@@ -31,6 +32,7 @@ export interface ExampleStream {
     messages: {
         [ExampleTypes.MemberWasAdded]: MemberWasAdded,
         [ExampleTypes.MemberWasRemoved]: MemberWasRemoved,
+        [ExampleTypes.InsignificantThing]: string,
     }
 }
 
@@ -47,6 +49,10 @@ export class ExampleAggregateRoot extends AggregateRootBehavior<ExampleStream> {
         if (this.members.has(id)) {
             this.recordThat(ExampleTypes.MemberWasRemoved, {id});
         }
+    }
+
+    public recordInsignificantEvent(value: string): void {
+        this.recordThat(ExampleTypes.InsignificantThing, value);
     }
 
     public throwAnError(error: Error): void {

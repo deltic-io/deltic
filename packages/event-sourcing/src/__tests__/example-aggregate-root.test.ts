@@ -27,6 +27,14 @@ describe('Example aggregate root testing', () => {
         });
     });
 
+    test("An aggregate does not need to have a handler for an event", async ({when, emittedEvents}) => {
+        await when(async ({ aggregateRoot }) => {
+            aggregateRoot.recordInsignificantEvent('something');
+            aggregateRoot.recordInsignificantEvent('something else');
+        });
+        expect(emittedEvents()).toHaveLength(2);
+    })
+
     test("Adding a member", async ({when, emittedEvents, createMessage}) => {
         await when(async ({aggregateRoot}) => {
             aggregateRoot.addMember(frank);
