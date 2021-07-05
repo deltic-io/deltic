@@ -32,7 +32,7 @@ export class SynchronousMessageConsumer<Stream extends StreamDefinition> impleme
         let promise = later<void>();
         this.queue.push([() => this.consumer.consume(message), promise]);
 
-        if (this.queue.length === 1 && this.running === false) {
+        if (this.queue.length === 1 && !this.running) {
             this.running = true;
             setImmediate(this.process);
         }
