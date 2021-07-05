@@ -9,7 +9,7 @@ const test = createTestTooling<ExampleStream>('abcde', ExampleAggregateRoot);
  * @group unit
  */
 describe('Example aggregate root testing', () => {
-    test("Trying to add a member that is already part of the group", async ({given, when, createMessage, emittedEvents}) => {
+    test("adding a member that is already part of the group", async ({given, when, createMessage, emittedEvents}) => {
         await given(createMessage(ExampleTypes.MemberWasAdded, frank));
         await when(async ({aggregateRoot}) => {
             aggregateRoot.addMember(frank);
@@ -60,7 +60,14 @@ describe('Example aggregate root testing', () => {
         await when(async ({aggregateRoot}) => {
             aggregateRoot.removeMember(frank.id);
         });
-        expect(emittedEvents()).toEqual([createMessage(ExampleTypes.MemberWasRemoved, {id: frank.id})])
+        expect(emittedEvents()).toEqual([createMessage(ExampleTypes.MemberWasRemoved, {id: frank.id})]);
+    });
+
+    test("Removing a member that does not exist", async ({when, createMessage, given, emittedEvents}) => {
+        await when(async ({aggregateRoot}) => {
+            aggregateRoot.removeMember(frank.id);
+        });
+        expect(emittedEvents()).toHaveLength(0);
     });
 
     test("Causing an error", async ({when, thrownError}) => {
