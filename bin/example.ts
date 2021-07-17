@@ -80,7 +80,6 @@ let messageRepository = new InMemoryMessageRepository<ExampleStream>();
 let repository = new AggregateRootRepository(ExampleAggregateRoot, messageRepository);
 
 (async () => {
-    console.log('starting');
     let aggregateRoot = await repository.retrieve('abc');
 
     const frank: Member = {id: '1234', name: 'Frank', age: 32};

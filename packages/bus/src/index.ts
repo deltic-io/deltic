@@ -12,16 +12,18 @@ export interface Input<T, P> {
     payload: P;
 }
 
-export type BusHandler<Type, Payload, ReturnType> = (payload: Payload, input: Input<Type, Payload>) => Promise<ReturnType>;
-
 export type BusHandlers<Definition extends BusDefinition> = {
-    [T in keyof Definition]: BusHandler<T, Definition[T]['payload'], Definition[T]['response']>
+    readonly [T in keyof Definition]: (payload: Definition[T]['payload'], input: Input<T, Definition[T]['payload']>) => Promise<Definition[T]['response']>
 }
 
-export class InputNotSupported extends Error{
+export class InputNotSupported extends Error {
 }
 
-export class Bus<Definition extends BusDefinition> {
+export interface ServiceBus<Definition extends BusDefinition> {
+    handle<T extends keyof Definition>(input: Input<T, Definition[T]['payload']>): Promise<Definition[T]['response']>
+}
+
+export class Bus<Definition extends BusDefinition> implements ServiceBus<Definition>{
     constructor(private readonly handlers: BusHandlers<Definition>) {
     }
 
