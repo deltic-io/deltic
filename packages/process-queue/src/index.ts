@@ -14,6 +14,12 @@ export interface ProcessQueueOptions<Task> {
     onFinish?: (task: Task) => Promise<any>,
 }
 
+const defaults = {
+    autoStart: true,
+    onDrained: () => {},
+    onFinish: async () => {},
+};
+
 export class ProcessQueue<Task> {
     private nextTick: undefined | (() => void) = undefined;
     private tasks: Task[] = [];
@@ -26,12 +32,7 @@ export class ProcessQueue<Task> {
     public constructor(
         options: ProcessQueueOptions<Task>,
     ) {
-        this.config = {
-            autoStart: true,
-            onDrained: () => {},
-            onFinish: async () => {},
-            ...options,
-        };
+        this.config = {...defaults, ...options};
         this.processNextTask = this.processNextTask.bind(this);
         this.skipCurrentTask = this.skipCurrentTask.bind(this);
         this.running = this.config.autoStart;
@@ -61,11 +62,16 @@ export class ProcessQueue<Task> {
         if (this.tasks.length > 0) {
             this.processing = true;
             this.tries++;
-            // noinspection JSVoidFunctionReturnValueUsed
-            this.config.processor.apply(null, [this.tasks[0]]).then(
-                (_) => this.handleProcessorResult(undefined),
-                (err: Error) => this.handleProcessorResult(err)
-            );
+            let promise = this.config.processor.apply(null, [this.tasks[0]]);
+            promise.then(
+                () => {
+                    console.log('finishing');
+                    this.handleProcessorResult(undefined);
+                }
+            ).catch((err: Error) => {
+                console.log('errored');
+                this.handleProcessorResult(err);
+            });
         }
     }
 
@@ -86,14 +92,13 @@ export class ProcessQueue<Task> {
         } else {
             this.tries = 0;
             this.tasks.shift();
+            this.config.onFinish.apply(null, [task]);
         }
 
         if (this.nextTick) {
             this.nextTick.apply(null);
             this.nextTick = undefined;
         }
-
-        this.config.onFinish.apply(null, [task]);
 
         if (this.tasks.length === 0) {
             this.config.onDrained.apply(null, [this]);
@@ -110,6 +115,6 @@ export class ProcessQueue<Task> {
             return Promise.resolve();
         }
 
-        return new Promise<void>(resolve => this.nextTick = resolve);
+        return new Promise<void>(resolve => this.nextTick = () => resolve());
     }
 }

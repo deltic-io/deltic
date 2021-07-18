@@ -1,19 +1,5 @@
 import { ProcessQueue } from './index';
 
-class AppendingProcessor {
-    public value: string = '';
-
-    constructor() {
-        this.process = this.process.bind(this);
-    }
-
-    public async process(value: string): Promise<void> {
-        this.value = this.value.concat(value);
-    }
-}
-
-let wait = (duration: number) => new Promise(resolve => setTimeout(resolve, duration));
-
 describe("@deltic/process-queue", () => {
     test("the queue processes items in order", async () => {
         let processor = new AppendingProcessor();
@@ -147,7 +133,23 @@ describe("@deltic/process-queue", () => {
         expect(tries).toEqual(1);
     });
 
-    test('purging prevents the next task from being handled', async () => {
+    test('stopping the queue in the same event loop cycle prevents tasks from being processed', async () => {
+        let processed = 0;
+        let processQueue = new ProcessQueue({
+            onError: async ({error, queue, skipCurrentTask}) => {
+                skipCurrentTask();
+            },
+            processor: async (task) => {
+                processed++;
+            },
+        });
+        processQueue.push('a');
+        processQueue.push('b');
+        await processQueue.stop();
+        expect(processed).toEqual(0);
+    });
+
+    test('purging prevents the next task(s) from being handled', async () => {
         let tries = 0;
         let processQueue = new ProcessQueue({
             onError: async () => {},
@@ -160,4 +162,51 @@ describe("@deltic/process-queue", () => {
         await processQueue.purge();
         expect(tries).toEqual(0);
     });
+
+    test('when a job is completed the onFinish hook is called', async () => {
+        let called = false;
+        let processQueue = new ProcessQueue<string>({
+            onError: async () => {},
+            onFinish: async () => {
+                called = true;
+            },
+            processor: async (task) => {
+            }
+        });
+        processQueue.push('something');
+        await wait(1);
+        await processQueue.stop();
+        expect(called).toBe(true);
+    });
+
+    test('when a job errors the onFinish hook is NOT called', async () => {
+        let called = false;
+        let processQueue = new ProcessQueue<string>({
+            onError: async () => {},
+            onFinish: async () => {
+                called = true;
+            },
+            processor: async (task) => {
+                throw new Error('oh no');
+            }
+        });
+        processQueue.push('something');
+        await wait(1);
+        await processQueue.stop();
+        expect(called).toBe(false);
+    });
 });
+
+class AppendingProcessor {
+    public value: string = '';
+
+    constructor() {
+        this.process = this.process.bind(this);
+    }
+
+    public async process(value: string): Promise<void> {
+        this.value = this.value.concat(value);
+    }
+}
+
+let wait = (duration: number) => new Promise(resolve => setTimeout(resolve, duration));
